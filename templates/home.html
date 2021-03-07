@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+
+{% block body %}
+<h1>Hello, 
+{{ name }} | {{ post }}, Mood Indigo
+</h1>
+
+<div class="container">
+    <form action="\home\" method="POST">
+    {% csrf_token %}
+        <div class="mb-3">
+          <label for="exampleInputFName" class="form-label">First Name</label>
+          <input type="text" name="fName" class="form-control" id="exampleInputFName" aria-describedby="emailHelp">
+          <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputLName" class="form-label">Last Name</label>
+            <input type="text" name="lName" class="form-control" id="exampleInputLName" aria-describedby="emailHelp">
+        </div>  
+        <div class="mb-3">
+            <label for="exampleInputUName" class="form-label">User ID</label>
+            <input type="text" name="userID" class="form-control" id="exampleInputUName" aria-describedby="emailHelp">
+        </div>  
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="text" name="password" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputNumber" class="form-label">Phone Number</label>
+          <input type="number" name="mobileNo" class="form-control" id="exampleInputNumber">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPost" class="form-label">Post</label>
+            <select class="form-select" name="post" aria-label="Disabled select example" id="exampleInputPost" disabled>
+                <option value="1" selected>{{ post_reg }}</option>
+            </select>
+        </div>
+        <input type="hidden" name="orignalUserID" class="form-control" id="exampleInputorigUserID" value="{{ userID }}">
+        <input type="hidden" name="post_app" class="form-control" id="exampleInputorigUserID" value="{{ post_reg }}">
+            
+        <!-- <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div> -->
+        <button name="register" type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</div>
+
+<!-- {% comment %} Coupon Transfer system {% endcomment %} -->
+
+{% endblock body %}
