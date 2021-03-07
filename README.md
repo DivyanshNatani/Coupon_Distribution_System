@@ -2,9 +2,9 @@ This project is made on Django 3.1.7
 
 Run Project by going to this folder on command line and run cammand
 
-'''python
+```python
 python manage.py runserver
-'''
+```
 
 URLs available
 
