@@ -5,5 +5,4 @@ from login import views
 urlpatterns = [
     path('', views.loginPage),
     path('home/', views.loginCheck),
-
 ]
