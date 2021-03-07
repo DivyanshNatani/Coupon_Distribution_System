@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http.response import JsonResponse, HttpResponse
 from login.models import userDetail
 from django.contrib import messages
+from coupons.models import couponsTable
 
 isLogin = False
 lastLoginID = None
@@ -22,10 +23,15 @@ def loginCheck(request):
             # print(obj[0].password)
             for obj_child in obj:
                 if obj_child.password == password :
+                    couponDetail = list(couponsTable.objects.values('allotedTo','venderName','id').filter(allotedTo=nameID).filter(allocationStatus='Using'))
+                    post_reg = "Coordinator" if obj_child.userPost=="CG" else "Organisor"
+                    userUnder = list(userDetail.objects.values('userID', 'firstName', 'lastName').filter(userPost=post_reg))
                     context = {"userID" : obj_child.userID,
                                 "name" : obj_child.firstName,
                                 "post" : obj_child.userPost,
-                                "post_reg" : "Coordinator" if obj_child.userPost=="CG" else "Organisor"
+                                "post_reg" : post_reg,
+                                "detail" : couponDetail,
+                                "userUnder" : userUnder
                                 }
                     # print("Yes", userDetail.userID, userDetail.password)
                     return render(request, 'home.html', context)
@@ -44,10 +50,15 @@ def loginCheck(request):
             obj=obj.filter(userID=nameID)
             obj1=userDetail.objects
             obj1=obj1.filter(userID=request.POST.get('orignalUserID'))
+            couponDetail = list(couponsTable.objects.values('allotedTo','venderName','id').filter(allotedTo=obj1[0].userID).filter(allocationStatus='Using'))
+            post_reg = "Coordinator" if obj_child.userPost=="CG" else "Organisor"
+            userUnder = list(userDetail.objects.values('userID', 'firstName', 'lastName').filter(userPost=post_reg))
             context = {"userID" : obj1[0].userID,
                             "name" : obj1[0].firstName,
                             "post" : obj1[0].userPost,
-                            "post_reg" : "Coordinator" if obj1[0].userPost=="CG" else "Organisor",
+                            "post_reg" : post_reg,
+                            "detail" : couponDetail,
+                            "userUnder" : userUnder
                         }
 
             for obj_child in obj:
@@ -74,6 +85,38 @@ def loginCheck(request):
             # print("saved")
             messages.success(request, fname + " successfully registered!!")
             return render(request, 'home.html', context)
+
+        elif "reallocate" in request.POST:
+            nameID = request.POST.get('userID')
+            post_reg = request.POST.get('post_app')
+            obj=userDetail.objects
+            obj1=obj.filter(userID=nameID)
+            
+            coupon = int(request.POST.get('coupon'))
+            targetID = request.POST.get('aName')
+
+            b = couponsTable.objects.get(id=coupon)
+            b.allotedTo = targetID
+            b.save()
+            messages.success(request,"Coupon No"+ str(coupon) + "successfully transfered to "+ targetID)
+            
+            
+            couponDetail = list(couponsTable.objects.values('allotedTo','venderName','id').filter(allotedTo=nameID).filter(allocationStatus='Using'))
+            # post_reg = "Coordinator" if obj_child.userPost=="CG" else "Organisor"
+            userUnder = list(userDetail.objects.values('userID', 'firstName', 'lastName').filter(userPost=post_reg))
+            context = {"userID" : obj1[0].userID,
+                    "name" : obj1[0].firstName,
+                    "post" : obj1[0].userPost,
+                    "post_reg" : "Coordinator" if obj1[0].userPost=="CG" else "Organisor",
+                    "detail" : couponDetail,
+                    "userUnder" : userUnder
+                    }
+            return render(request, 'home.html', context)
+
+    
+    return render(request, 'memberlogin.html')            
+
+
 
 
 

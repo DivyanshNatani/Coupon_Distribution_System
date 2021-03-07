@@ -3,4 +3,21 @@
 {% block body %}
 <h2 class="text-center">Use your Coupons here</h2>
 
+<div class="container">
+    <!-- <h3 class="text-center">Vender Registration</h3> -->
+    <form action="\cds\" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleInputPost" class="form-label">Coupons</label>
+            <select class="form-select" name="cName" aria-label="Disabled select example" id="exampleInputPost">
+                {% for d in detail %}
+                <option>{{d.venderName}} | COU | {{d.id}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input type="hidden" name="userID" class="form-control" id="exampleInputorigUserID" value="{{ userID }}">        
+        
+        <button name="use_coupon" type="submit" class="btn btn-primary">Use Coupon</button>
+</div>
+
 {% endblock body %}

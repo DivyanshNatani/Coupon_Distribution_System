@@ -2,10 +2,12 @@
 
 {% block body %}
 <h1>Hello, 
-{{ name }} | {{ post }}, Mood Indigo
+{{ name }} 
 </h1>
-
+<div class="tempflex">
+  
 <div class="container">
+  <h3 class="text-center">Register {{ post_reg }}</h3>
     <form action="\home\" method="POST">
     {% csrf_token %}
         <div class="mb-3">
@@ -46,6 +48,40 @@
       </form>
 </div>
 
+<div class="container">
+  <h3 class="text-center">Reallocate Coupons</h3>
+  <form action="\home\" method="POST">
+
+    {% csrf_token %}
+        <div class="mb-3">
+          <label for="exampleInputFName" class="form-label">Select Coupons to be transefered</label>
+          <select class="form-select" name="coupon" multiple aria-label="multiple select example">
+            {% for d in detail %}
+                <option value="{{d.id}}">{{d.venderName}} | COU | {{d.id}}</option>
+            {% endfor %}
+          </select>
+                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputLName" class="form-label">Allocate To</label>
+            <select class="form-select" name="aName" aria-label="Disabled select example" id="exampleInputPost">
+                {% for d in userUnder %}
+                <option value="{{d.userID}}">{{d.userID}} (Name : {{d.firstName}} {{d.lastName}})</option>
+                {% endfor %}
+            </select>
+          </div>  
+        
+        <input type="hidden" name="userID" class="form-control" id="exampleInputorigUserID" value="{{ userID }}">
+        <input type="hidden" name="post_app" class="form-control" id="exampleInputorigUserID" value="{{ post_reg }}">
+            
+        <!-- <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div> -->
+        <button name="reallocate" type="submit" class="btn btn-primary">Reallocate</button>
+      </form>
+</div>
 <!-- {% comment %} Coupon Transfer system {% endcomment %} -->
 
+</div>
 {% endblock body %}
