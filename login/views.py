@@ -13,6 +13,10 @@ def loginPage(request):
     messages.success(request, "Welcome to Mood Indigo CDS System!")
     return render(request,'memberlogin.html')
 
+def loginPage2(request):
+    messages.success(request, "Welcome to Mood Indigo CDS System!")
+    return render(request,'fnblogin.html')
+    
 def loginCheck(request):
     if request.method == 'POST':
         if "login" in request.POST:
@@ -25,7 +29,12 @@ def loginCheck(request):
             for obj_child in obj:
                 if obj_child.password == password :
                     couponDetail = list(couponsTable.objects.values('allotedTo','venderName','id').filter(allotedTo=nameID).filter(allocationStatus='Using'))
-                    post_reg = "Coordinator" if obj_child.userPost=="CG" else "Organiser"
+                    if obj_child.userPost=="CG":
+                        post_reg = "Coordinator" 
+                    elif obj_child.userPost=="FnB":
+                        post_reg = "CG"
+                    else:
+                        post_reg = "Organisor"
                     if(post_reg == "Coordinator"):
                         userUnder = list(userDetail.objects.values('userID', 'firstName', 'lastName').exclude(userPost="CG"))
                     else:
@@ -38,7 +47,9 @@ def loginCheck(request):
                                 "userUnder" : userUnder
                                 }
                     # print("Yes", userDetail.userID, userDetail.password)
-                    if(post_reg == "Coordinator" or obj_child.userPost == "Coordinator"):
+                    if obj_child.userPost=="FnB":
+                        return render(request, 'fnb.html', context)
+                    elif(post_reg == "Coordinator" or obj_child.userPost == "Coordinator"):
                         return render(request, 'home.html', context)
                     else:
                         messages.warning(request, "Please login to CDS coupon portal to use Coupons.")
